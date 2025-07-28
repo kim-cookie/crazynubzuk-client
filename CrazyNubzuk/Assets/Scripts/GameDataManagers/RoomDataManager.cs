@@ -18,6 +18,9 @@ public class RoomDataManager : MonoBehaviour
     public bool hostReady = false;
     public bool guestReady = false;
 
+    [Header("최고 기록")]
+    public int bestRecord = 0;
+
     void Awake()
     {
         if (Instance == null)
@@ -44,5 +47,6 @@ public class RoomDataManager : MonoBehaviour
         participants = 0;
         hostReady = false;
         guestReady = false;
+        bestRecord = 0;
     }
 }

@@ -17,6 +17,7 @@ public class GameOverUIController : MonoBehaviour
 
         retryButton.onClick.AddListener(() =>
         {
+            Time.timeScale = 1f;
             SceneManager.LoadScene("GameScene"); // 다시시작
         });
 
