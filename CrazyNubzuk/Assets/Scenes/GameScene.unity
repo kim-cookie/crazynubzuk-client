@@ -2030,7 +2030,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bodyRb: {fileID: 1518898435}
-  torquePower: 1
+  torquePower: 30
+  stabilityTorque: 2
+  maxAngularVelocity: 10
 --- !u!50 &1518898435
 Rigidbody2D:
   serializedVersion: 5
@@ -2045,7 +2047,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.1
+  m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
