@@ -49,6 +49,11 @@ public class WaitingSceneController : MonoBehaviour
         readyButton.onClick.AddListener(OnClickReady);
         startGameButton.onClick.AddListener(OnClickStartGame);
         exitButton.onClick.AddListener(OnClickExit);
+
+        // 🔁 WebSocket 응답 핸들러 등록
+        NetworkManager.Instance.RegisterHandler<ResponsePacketData.ReadyGame>(OnReadyGame);
+        NetworkManager.Instance.RegisterHandler<ResponsePacketData.StartGame>(OnStartGame);
+        NetworkManager.Instance.RegisterHandler<ResponsePacketData.Exit>(OnExitResponse);
     }
 
     void Update()
@@ -70,16 +75,17 @@ public class WaitingSceneController : MonoBehaviour
 
     void OnClickReady()
     {
-        if (isHost)
-        {
-            RoomDataManager.Instance.hostReady = !RoomDataManager.Instance.hostReady;
-            hostStatusText.text = RoomDataManager.Instance.hostReady ? "Status: Ready" : "Status: Not Ready";
-        }
-        else
-        {
-            RoomDataManager.Instance.guestReady = !RoomDataManager.Instance.guestReady;
-            guestStatusText.text = RoomDataManager.Instance.guestReady ? "Status: Ready" : "Status: Not Ready";
-        }
+        string nickname = UserDataManager.Instance.nickname;
+        NetworkManager.Instance.Send(new RequestPacketData.ReadyGame(nickname));
+    }
+
+    void OnReadyGame(ResponsePacketData.ReadyGame data)
+    {
+        RoomDataManager.Instance.hostReady = data.hostReady;
+        RoomDataManager.Instance.guestReady = data.guestReady;
+
+        hostStatusText.text = data.hostReady ? "Status: Ready" : "Status: Not Ready";
+        guestStatusText.text = data.guestReady ? "Status: Ready" : "Status: Not Ready";
 
         UpdateStartButtonState();
     }
@@ -91,14 +97,22 @@ public class WaitingSceneController : MonoBehaviour
 
     void OnClickStartGame()
     {
-        if (startGameButton.interactable)
-        {
-            Debug.Log("게임 시작!");
-            // 예: SceneManager.LoadScene("GameScene");
-        }
+        string nickname = UserDataManager.Instance.nickname;
+        string role = UserDataManager.Instance.direction;
+        NetworkManager.Instance.Send(new RequestPacketData.StartGame(nickname, role));
+    }
+
+    void OnStartGame(ResponsePacketData.StartGame _)
+    {
+        SceneManager.LoadScene("GameScene");
     }
 
     void OnClickExit()
+    {
+        NetworkManager.Instance.Send(new RequestPacketData.Exit());
+    }
+
+    void OnExitResponse(ResponsePacketData.Exit _)
     {
         SceneManager.LoadScene("LobbyScene");
     }

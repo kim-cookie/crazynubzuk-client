@@ -118,55 +118,34 @@ public class NetworkManager : MonoBehaviour
     private readonly Dictionary<Type, Action<ResponsePacketData>> _responseHandlers = new();
     private readonly Dictionary<int, Type> _responseTypes = new()
     {
-        { 1, typeof(ResponsePacketData.Pong) },
-        { 1001, typeof(ResponsePacketData.EnterRoom) },
-        { 1002, typeof(ResponsePacketData.LeaveRoom) },
-        { 1007, typeof(ResponsePacketData.PlayerCountChanged) },
-        { 1004, typeof(ResponsePacketData.CreateRoom) },
-        { 1005, typeof(ResponsePacketData.YouAreHost) },
+        { 2, typeof(ResponsePacketData.Pong) },
+        { 1001, typeof(ResponsePacketData.EnterLobby) },
+        { 1002, typeof(ResponsePacketData.CreateRoom) },
+        { 1003, typeof(ResponsePacketData.EnterRoom) },
         { 1011, typeof(ResponsePacketData.ReadyGame) },
-        { 1010, typeof(ResponsePacketData.StartGame) },
-        { 1020, typeof(ResponsePacketData.StartRound) },
-        { 1022, typeof(ResponsePacketData.FirstRoundRules) },
-        { 1023, typeof(ResponsePacketData.ShuffleCards) },
-        { 1024, typeof(ResponsePacketData.DealOneCard) },
-        { 1025, typeof(ResponsePacketData.UpdateHand) },
-        { 1026, typeof(ResponsePacketData.YourCard) },
-        { 1103, typeof(ResponsePacketData.YourRank) },
-        { 1104, typeof(ResponsePacketData.YourOrder) },
-        { 1105, typeof(ResponsePacketData.RoundStarted) },
-        { 1106, typeof(ResponsePacketData.DealCards) },
-        { 1107, typeof(ResponsePacketData.ExchangePhase) },
-        { 1108, typeof(ResponsePacketData.ExchangeInfo) },
-        { 1109, typeof(ResponsePacketData.ExchangeInfo2) },
-        { 1111, typeof(ResponsePacketData.ExchangeDone) },
-        { 1112, typeof(ResponsePacketData.YourTurn) },
-        { 1115, typeof(ResponsePacketData.AllPassed) },
-        { 1116, typeof(ResponsePacketData.EndTurn) },
-        { 1028, typeof(ResponsePacketData.DoneRound) },
-        { 1029, typeof(ResponsePacketData.PileUpdate) },
-        { 1030, typeof(ResponsePacketData.InvalidCard) },
-        { 1031, typeof(ResponsePacketData.AllInfo) },
-        { 1032, typeof(ResponsePacketData.NextPage) },
-        { 1033, typeof(ResponsePacketData.SubmitError) },
-        { 1034, typeof(ResponsePacketData.CurrentTurn)}
+        { 1012, typeof(ResponsePacketData.StartGame) },
+        { 1017, typeof(ResponsePacketData.Restart) },
+        { 1018, typeof(ResponsePacketData.Exit) },
+        { 1021, typeof(ResponsePacketData.Record) },
+        { 1031, typeof(ResponsePacketData.UpdateBalance) }
         // ... 필요시 추가
     };
 
     private readonly Dictionary<Type, int> _requestSignals = new()
     {
         { typeof(RequestPacketData.Ping), 1 },
-        { typeof(RequestPacketData.EnterRoom), 1001 },
-        { typeof(RequestPacketData.LeaveRoom), 1002 },  
-        { typeof(RequestPacketData.GetRoomInfo), 1003 },
-        { typeof(RequestPacketData.CreateRoom), 1004 },
-        { typeof(RequestPacketData.RoundStarted),1105},
-        { typeof(RequestPacketData.StartGame), 1010 },
-        { typeof(RequestPacketData.ThrowSubmit), 1110 },
-        { typeof(RequestPacketData.PlayCard), 1113 },
-        { typeof(RequestPacketData.Pass), 1114 },
-        { typeof(RequestPacketData.DoneRound), 1028 },
-        { typeof(RequestPacketData.AllInfo), 1031 },
+        { typeof(RequestPacketData.EnterLobby), 1001 },
+        { typeof(RequestPacketData.CreateRoom), 1002 },
+        { typeof(RequestPacketData.EnterRoom), 1003 },
+        { typeof(RequestPacketData.ReadyGame), 1011 },
+        { typeof(RequestPacketData.StartGame), 1012 },
+        { typeof(RequestPacketData.RightIn), 1013 },
+        { typeof(RequestPacketData.RightOut), 1014 },
+        { typeof(RequestPacketData.LeftIn), 1015 },
+        { typeof(RequestPacketData.LeftOut), 1016 },
+        { typeof(RequestPacketData.Restart), 1017 },
+        { typeof(RequestPacketData.Exit), 1018 },
+        { typeof(RequestPacketData.Record), 1021 }
 
         // ... 필요시 추가
     };

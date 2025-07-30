@@ -637,6 +637,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 720825365}
   gameOverUI: {fileID: 179615308}
+  bodyController: {fileID: 1518898434}
 --- !u!1 &246682726
 GameObject:
   m_ObjectHideFlags: 0
@@ -2831,9 +2832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bodyRb: {fileID: 1518898435}
-  torquePower: 30
-  stabilityTorque: 2
-  maxAngularVelocity: 10
+  smoothSpeed: 5
 --- !u!50 &1518898435
 Rigidbody2D:
   serializedVersion: 5

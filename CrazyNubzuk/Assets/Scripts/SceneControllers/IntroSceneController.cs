@@ -11,6 +11,8 @@ public class IntroSceneController : MonoBehaviour
     void Start()
     {
         startButton.onClick.AddListener(OnStartClicked);
+        // 응답 핸들러 등록
+        NetworkManager.Instance.RegisterHandler<ResponsePacketData.EnterLobby>(OnEnterLobby);
     }
 
     void OnStartClicked()
@@ -25,8 +27,16 @@ public class IntroSceneController : MonoBehaviour
 
         UserDataManager.Instance.nickname = nickname;
 
-        // WebSocketManager.Send("ENTER_LOBBY", {nickname}) ← 나중에
-        // 지금은 씬 이동만
+        // 서버로 EnterLobby 요청
+        var packet = new RequestPacketData.EnterLobby(nickname);
+        NetworkManager.Instance.Send(packet);
+
+    }
+
+    void OnEnterLobby(ResponsePacketData.EnterLobby data)
+    {
+        Debug.Log($"입장 성공");
+
         SceneManager.LoadScene("LobbyScene");
     }
 }

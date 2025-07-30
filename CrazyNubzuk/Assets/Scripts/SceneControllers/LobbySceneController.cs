@@ -40,6 +40,9 @@ public class LobbySceneController : MonoBehaviour
         cancelCreateButton.onClick.AddListener(() => createRoomPopup.SetActive(false));
         confirmCreateButton.onClick.AddListener(OnCreateRoomConfirmed);
         enterRoomButton.onClick.AddListener(OnEnterRoomClicked);
+
+        NetworkManager.Instance.RegisterHandler<ResponsePacketData.CreateRoom>(OnCreateRoom);
+        NetworkManager.Instance.RegisterHandler<ResponsePacketData.EnterRoom>(OnEnterRoom);
     }
 
     // 방 생성 팝업에서 확인 누르면
@@ -50,29 +53,34 @@ public class LobbySceneController : MonoBehaviour
 
         string direction = leftToggle.isOn ? "left" : "right";
         string hostName = UserDataManager.Instance.nickname;
-        int participants = 1;
 
-        // RoomItem 생성
-        GameObject item = Instantiate(roomItemPrefab, roomListContent);
-        RoomItem roomItem = item.GetComponent<RoomItem>();
-        roomItem.Init(title, participants, this);
-        roomItemMap[title] = roomItem;
-
-        createRoomPopup.SetActive(false);
+        // 서버에 CREATE_ROOM 요청
+        var req = new RequestPacketData.CreateRoom(hostName, title);
+        NetworkManager.Instance.Send(req);
 
         // ✅ 임시 데이터 저장 (예: UserDataManager 활용)
         RoomDataManager.Instance.roomId = title;
         RoomDataManager.Instance.hostNickname = hostName;
-        RoomDataManager.Instance.participants = participants;
         RoomDataManager.Instance.hostDirection = direction;
         RoomDataManager.Instance.guestDirection = direction == "left" ? "right" : "left";
         UserDataManager.Instance.isHost = true;
         UserDataManager.Instance.direction = direction;
+    }
 
+    void OnCreateRoom(ResponsePacketData.CreateRoom data)
+    {
+        // RoomItem 생성
+        GameObject item = Instantiate(roomItemPrefab, roomListContent);
+        RoomItem roomItem = item.GetComponent<RoomItem>();
+        roomItem.Init(data.roomName, data.participants, this);
+        roomItemMap[data.roomName] = roomItem;
 
-        // ✅ 씬 이동
+        RoomDataManager.Instance.participants = data.participants;
+
+        createRoomPopup.SetActive(false);
         SceneManager.LoadScene("WaitingScene");
     }
+
 
     // ScrollView의 방 항목 클릭 시 호출될 함수
     public void ShowRoomInfo(string roomId, string hostName, int participants)
@@ -103,18 +111,23 @@ public class LobbySceneController : MonoBehaviour
             return;
         }
 
-        Debug.Log($"입장 시도: {selectedRoomId}");
+        string nickname = UserDataManager.Instance.nickname;
 
-        // 참가자 수 증가
-        roomItem.UpdateParticipants(2);
+        // 서버에 ENTER_ROOM 요청
+        var req = new RequestPacketData.EnterRoom(nickname);
+        NetworkManager.Instance.Send(req);
 
         // 데이터 저장
         RoomDataManager.Instance.roomId = selectedRoomId;
         RoomDataManager.Instance.participants = 2;
         UserDataManager.Instance.isHost = false;
-        UserDataManager.Instance.direction = "right"; // 기본값 또는 서버 정보 기반
+    }
 
+    void OnEnterRoom(ResponsePacketData.EnterRoom data)
+    {
+        UserDataManager.Instance.direction = data.direction;
         SceneManager.LoadScene("WaitingScene");
     }
+
 
 }

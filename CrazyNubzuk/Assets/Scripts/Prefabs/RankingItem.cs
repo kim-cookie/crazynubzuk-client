@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class RankingItemUI : MonoBehaviour
+public class RankingItem : MonoBehaviour
 {
     public TextMeshProUGUI rankText;
     public TextMeshProUGUI player1Text;
