@@ -1299,6 +1299,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 31eddef01407d664bb7dc07175c9797f, type: 3}
   - {fileID: 21300000, guid: 5363ba5ff6a4d25418d986e793446fdb, type: 3}
   - {fileID: 21300000, guid: f0328e3028fda6341a7f32ca37ccd221, type: 3}
+  changeInterval: 30
 --- !u!114 &601904865
 MonoBehaviour:
   m_ObjectHideFlags: 0
