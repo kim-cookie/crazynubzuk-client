@@ -48,21 +48,21 @@ public class LobbySceneController : MonoBehaviour
     // 방 생성 팝업에서 확인 누르면
     void OnCreateRoomConfirmed()
     {
-        string title = roomTitleInput.text.Trim();
-        if (string.IsNullOrEmpty(title)) return;
+        string roomId = roomTitleInput.text.Trim();
+        if (string.IsNullOrEmpty(roomId)) return;
 
-        string direction = leftToggle.isOn ? "left" : "right";
+        string direction = leftToggle.isOn ? "Left" : "Right";
         string hostName = UserDataManager.Instance.nickname;
 
         // 서버에 CREATE_ROOM 요청
-        var req = new RequestPacketData.CreateRoom(hostName, title);
+        var req = new RequestPacketData.CreateRoom(hostName, roomId, direction);
         NetworkManager.Instance.Send(req);
 
         // ✅ 임시 데이터 저장 (예: UserDataManager 활용)
-        RoomDataManager.Instance.roomId = title;
+        RoomDataManager.Instance.roomId = roomId;
         RoomDataManager.Instance.hostNickname = hostName;
         RoomDataManager.Instance.hostDirection = direction;
-        RoomDataManager.Instance.guestDirection = direction == "left" ? "right" : "left";
+        RoomDataManager.Instance.guestDirection = direction == "Left" ? "Right" : "Left";
         UserDataManager.Instance.isHost = true;
         UserDataManager.Instance.direction = direction;
     }
