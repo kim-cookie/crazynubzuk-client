@@ -55,7 +55,7 @@ public class LobbySceneController : MonoBehaviour
         string hostName = UserDataManager.Instance.nickname;
 
         // 서버에 CREATE_ROOM 요청
-        var req = new RequestPacketData.CreateRoom(hostName, roomId, direction);
+        var req = new RequestPacketData.CreateRoom(hostName, roomId);
         NetworkManager.Instance.Send(req);
 
         // ✅ 임시 데이터 저장 (예: UserDataManager 활용)
